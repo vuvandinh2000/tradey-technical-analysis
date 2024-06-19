@@ -1,0 +1,1 @@
+# tradey-technical-analysis
