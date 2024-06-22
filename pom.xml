@@ -46,6 +46,25 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-dynamodb</artifactId>
+			<version>1.12.748</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-core -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-core</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>com.amazonaws</groupId>-->
+<!--			<artifactId>aws-java-sdk-dynamodb</artifactId>-->
+<!--			<version>1.12.747</version>-->
+<!--		</dependency>-->
+
 	</dependencies>
 
 	<build>
