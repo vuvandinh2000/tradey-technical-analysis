@@ -22,18 +22,18 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
 
     @Override
     public List<OHLCV> getAllFromTimestamp(String timestamp) {
-        Map<String, Objects> valueMap = new HashMap<>();
-        QuerySpec querySpec = new QuerySpec()
-                .withKeyConditionExpression("timestamp >= ")
-                .withValueMap(valueMap);
-
-        Iterable<Item> items = table.query(querySpec);
-        List<OHLCV> ohlcvList = new ArrayList<>();
-        for (Item item: items) {
-            OHLCV ohlcv = new OHLCV();
-            ohlcvList.add(ohlcv);
-        }
-        return ohlcvList;
+//        Map<String, Objects> valueMap = new HashMap<>();
+//        QuerySpec querySpec = new QuerySpec()
+//                .withKeyConditionExpression("timestamp >= ")
+//                .withValueMap(valueMap);
+//
+//        Iterable<Item> items = table.query(querySpec);
+//        List<OHLCV> ohlcvList = new ArrayList<>();
+//        for (Item item: items) {
+//            OHLCV ohlcv = new OHLCV();
+//            ohlcvList.add(ohlcv);
+//        }
+        return null;
     }
 
     @Override
