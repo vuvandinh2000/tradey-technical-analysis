@@ -1,5 +1,7 @@
-# tradey-aws
+# Tradey Technical Analysis
 
+## Flowchart
+![Tradey Technical Analysis Flowchart](src/main/resources/static/img.png)
 
 ## Pre-commit
 ```shell
