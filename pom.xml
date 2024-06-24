@@ -58,12 +58,17 @@
 			<artifactId>aws-lambda-java-core</artifactId>
 			<version>1.2.3</version>
 		</dependency>
-<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>com.amazonaws</groupId>-->
-<!--			<artifactId>aws-java-sdk-dynamodb</artifactId>-->
-<!--			<version>1.12.747</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>RELEASE</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.32</version>
+		</dependency>
 
 	</dependencies>
 

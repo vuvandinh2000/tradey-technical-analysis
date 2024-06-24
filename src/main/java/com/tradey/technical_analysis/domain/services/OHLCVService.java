@@ -14,6 +14,7 @@ public class OHLCVService {
     }
 
     public List<OHLCV> getOHLCVBatch(String timestamp) {
-        return ohlcvRepository.getAllFromTimestamp(timestamp);
+//        return ohlcvRepository.getAllFromTimestamp(timestamp);
+        return null;
     }
 }

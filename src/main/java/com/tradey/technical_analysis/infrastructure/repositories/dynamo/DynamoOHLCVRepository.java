@@ -1,43 +1,59 @@
 package com.tradey.technical_analysis.infrastructure.repositories.dynamo;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.PrimaryKey;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.tradey.technical_analysis.domain.entity.OHLCV;
 import com.tradey.technical_analysis.domain.repositories.OHLCVRepository;
+import com.tradey.technical_analysis.infrastructure.dto.OHLCVDTO;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.List;
+
+import static com.tradey.technical_analysis.pkgs.Constants.ohlcvTableName;
 
 public class DynamoOHLCVRepository implements OHLCVRepository {
-    private final String table_name = "ohlcv_future";
 
-    private final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
-    private final DynamoDB dynamodb = new DynamoDB(client);
-    private final Table table = dynamodb.getTable(table_name);
+    private final Table table;
 
-    @Override
-    public List<OHLCV> getAllFromTimestamp(String timestamp) {
-//        Map<String, Objects> valueMap = new HashMap<>();
-//        QuerySpec querySpec = new QuerySpec()
-//                .withKeyConditionExpression("timestamp >= ")
-//                .withValueMap(valueMap);
-//
-//        Iterable<Item> items = table.query(querySpec);
-//        List<OHLCV> ohlcvList = new ArrayList<>();
-//        for (Item item: items) {
-//            OHLCV ohlcv = new OHLCV();
-//            ohlcvList.add(ohlcv);
-//        }
-        return null;
+    public DynamoOHLCVRepository(DynamoDB dynamoDB) {
+        this.table = dynamoDB.getTable(ohlcvTableName);
     }
 
     @Override
-    public List<OHLCV> updateBySymbolAndTimestamp() {
+    public OHLCV getBySymbolAndTimestamp(String symbol, String timestamp) {
+        Item item = table.getItem(new PrimaryKey("symbol", symbol, "timestamp", timestamp));
+
+        if (item == null) {
+            return null;
+        }
+
+        OHLCVDTO ohlcvDTO = OHLCVDTO.builder()
+                .symbol(item.getString("symbol"))
+                .timestamp(item.getString("timestamp"))
+                .open(item.getFloat("open"))
+                .high(item.getFloat("high"))
+                .low(item.getFloat("low"))
+                .close(item.getFloat("close"))
+                .volume(item.getFloat("volume"))
+                .build();
+
+        if (item.isPresent("ma50")) {
+            ohlcvDTO.setMa50(item.getDouble("ma50"));
+        }
+        if (item.isPresent("ma200")) {
+            ohlcvDTO.setMa200(item.getDouble("ma200"));
+        }
+        if (item.isPresent("diff_ma50_ma200")) {
+            ohlcvDTO.setDiff_ma50_ma200(item.getDouble("diff_ma50_ma200"));
+        }
+
+        return ohlcvDTO.toEntity();
+    }
+
+    @Override
+    public List<OHLCV> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp) {
         return null;
     }
 }
