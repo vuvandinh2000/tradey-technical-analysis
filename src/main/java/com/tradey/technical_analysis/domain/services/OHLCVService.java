@@ -13,8 +13,11 @@ public class OHLCVService {
         this.ohlcvRepository = ohlcvRepository;
     }
 
-    public List<OHLCV> getOHLCVBatch(String timestamp) {
-//        return ohlcvRepository.getAllFromTimestamp(timestamp);
-        return null;
+    public OHLCV getBySymbolAndTimestamp(String symbol, String timestamp) {
+        return ohlcvRepository.getBySymbolAndTimestamp(symbol, timestamp);
+    }
+
+    public List<OHLCV> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp, int limit){
+        return ohlcvRepository.getAllBySymbolOlderThanTimestamp(symbol, timestamp, limit);
     }
 }
