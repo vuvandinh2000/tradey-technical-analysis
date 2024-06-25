@@ -43,7 +43,7 @@ public class DynamoStateMachineRepositoryTest {
         // Mock
         Item item = new Item()
                 .withString("service", serviceName)
-                .withString("symbol", "BTCUSDT")
+                .withString("symbol", symbol)
                 .withMap("state", state)
                 .withString("updated_at", "2024-01-01T00:00:00");
         when(table.getItem(new PrimaryKey("service", serviceName, "symbol", symbol))).thenReturn(item);

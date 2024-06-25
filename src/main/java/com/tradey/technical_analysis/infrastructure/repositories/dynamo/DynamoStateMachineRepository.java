@@ -17,10 +17,11 @@ public class DynamoStateMachineRepository implements StateMachineRepository {
 
     private final Table table;
 
-    public DynamoStateMachineRepository(DynamoDB dynamodb) {
-        this.table = dynamodb.getTable(stateMachineTableName);
+    public DynamoStateMachineRepository(DynamoDB dynamoDB) {
+        this.table = dynamoDB.getTable(stateMachineTableName);
     }
 
+    @Override
     public TAStateMachineEntity getTA(String symbol) {
         Item item = table.getItem(new PrimaryKey("service", serviceName, "symbol", symbol));
 
@@ -35,6 +36,7 @@ public class DynamoStateMachineRepository implements StateMachineRepository {
         return new StateMachineDTO(service, symbol, state, updatedAt).toEntity();
     }
 
+    @Override
     public void upsertTA(String symbol, TAStateMachineEntity entity) {
         StateMachineDTO dto = StateMachineDTO.fromEntity(entity);
         Item item = new Item()
