@@ -3,6 +3,7 @@ package infrastructure.repositories.dynamo;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.internal.IteratorSupport;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.tradey.technical_analysis.domain.entity.OHLCV;
 import com.tradey.technical_analysis.infrastructure.repositories.dynamo.DynamoOHLCVRepository;
 import org.junit.jupiter.api.BeforeEach;
