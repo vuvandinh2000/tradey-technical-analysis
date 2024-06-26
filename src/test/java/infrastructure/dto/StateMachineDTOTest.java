@@ -47,7 +47,7 @@ public class StateMachineDTOTest {
 
         assertEquals(serviceName, dto.getService());
         assertEquals(expectedSymbol, dto.getSymbol());
-        assertEquals(expectedUpdatedAt, dto.getUpdatedAt());
+        assertEquals(expectedUpdatedAt, dto.getUpdated_at());
         Map<String, Object> state = dto.getState();
         assertEquals(expectedLatestTimestampProcessed, state.get("latest_timestamp_processed"));
     }

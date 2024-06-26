@@ -1,14 +1,14 @@
 package com.tradey.technical_analysis.domain.entity;
 
-import lombok.Setter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
-@Setter
+import java.math.BigInteger;
+
 @RequiredArgsConstructor
-public class TAStateMachineEntity {
+public class SymbolInfoEntity {
+    private final String exchangeType;
     private final String symbol;
-    private final String updatedAt;
-    private final String latestTimestampProcessed;
+    @Getter
+    private final BigInteger onboardDate;
 }
