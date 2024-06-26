@@ -5,37 +5,18 @@ import com.tradey.technical_analysis.domain.entity.TAStateMachineEntity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 
 import static com.tradey.technical_analysis.pkgs.Constants.serviceName;
 
+@RequiredArgsConstructor
+@Getter
 public class StateMachineDTO {
-    private String service;
-    private String symbol;
-    private Map<String, Object> state;
-    private String updated_at;
-
-    public StateMachineDTO(String service, String symbol, Map<String, Object> state, String updated_at) {
-        this.service = service;
-        this.symbol = symbol;
-        this.state = state;
-        this.updated_at = updated_at;
-    }
-
-    public String getService() {
-        return service;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public Map<String, Object> getState() {
-        return state;
-    }
-
-    public String getUpdatedAt() {
-        return updated_at;
-    }
+    private final String service;
+    private final String symbol;
+    private final Map<String, Object> state;
+    private final String updated_at;
 
     public TAStateMachineEntity toEntity() {
         if (!state.containsKey("latest_timestamp_processed")) {

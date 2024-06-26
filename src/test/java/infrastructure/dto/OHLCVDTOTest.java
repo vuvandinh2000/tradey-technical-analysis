@@ -84,20 +84,4 @@ public class OHLCVDTOTest {
         assertEquals(expectedMa200, entity.getMa200());
         assertEquals(expectedDiffMa50Ma200, entity.getDiffMa50Ma200());
     }
-//
-//    @Test
-//    public void testFromEntity() {
-//        String expectedSymbol = "BTCUSDT";
-//        String expectedLatestTimestampProcessed = "2024-01-01T00:00:00";
-//        String expectedUpdatedAt = "2024-01-01T00:00:00";
-//        TAStateMachineEntity entity = new TAStateMachineEntity(expectedSymbol, expectedUpdatedAt, expectedLatestTimestampProcessed);
-//
-//        StateMachineDTO dto = StateMachineDTO.fromEntity(entity);
-//
-//        assertEquals(serviceName, dto.getService());
-//        assertEquals(expectedSymbol, dto.getSymbol());
-//        assertEquals(expectedUpdatedAt, dto.getUpdatedAt());
-//        Map<String, Object> state = dto.getState();
-//        assertEquals(expectedLatestTimestampProcessed, state.get("latest_timestamp_processed"));
-//    }
 }

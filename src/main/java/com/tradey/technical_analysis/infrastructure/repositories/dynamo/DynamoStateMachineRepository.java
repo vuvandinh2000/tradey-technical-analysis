@@ -42,7 +42,7 @@ public class DynamoStateMachineRepository implements StateMachineRepository {
         Item item = new Item()
                 .withPrimaryKey("service", dto.getService(), "symbol", dto.getSymbol())
                 .withMap("state", dto.getState())
-                .withString("updated_at", dto.getUpdatedAt());
+                .withString("updated_at", dto.getUpdated_at());
         table.putItem(item);
     }
 }
