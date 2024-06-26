@@ -2,6 +2,8 @@ package com.tradey.technical_analysis.infrastructure.repositories.dynamo;
 
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import com.tradey.technical_analysis.domain.entity.OHLCV;
 import com.tradey.technical_analysis.domain.repositories.OHLCVRepository;
 import com.tradey.technical_analysis.infrastructure.dto.OHLCVDTO;
@@ -40,6 +42,20 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
         }
 
         return result;
+    }
+
+    @Override
+    public OHLCV update(OHLCV ohlcv) {
+        UpdateItemSpec updateItemSpec = new UpdateItemSpec()
+                .withPrimaryKey("symbol", ohlcv.getSymbol(), "timestamp", ohlcv.getTimestamp())
+                .withAttributeUpdate(
+                        new AttributeUpdate("ma50").put(ohlcv.getMa50()),
+                        new AttributeUpdate("ma200").put(ohlcv.getMa200()),
+                        new AttributeUpdate("diff_ma50_ma200").put(ohlcv.getDiffMa50Ma200())
+                )
+                .withReturnValues(ReturnValue.UPDATED_NEW);
+        UpdateItemOutcome outcome = this.table.updateItem(updateItemSpec);
+        return OHLCVItemToEntity(outcome.getItem());
     }
 
     private OHLCV OHLCVItemToEntity(Item item) {
