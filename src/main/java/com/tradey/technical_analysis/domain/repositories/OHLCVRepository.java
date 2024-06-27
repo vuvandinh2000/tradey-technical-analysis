@@ -2,10 +2,10 @@ package com.tradey.technical_analysis.domain.repositories;
 
 import java.util.List;
 
-import com.tradey.technical_analysis.domain.entity.OHLCV;
+import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
 
 public interface OHLCVRepository {
-    OHLCV getBySymbolAndTimestamp(String symbol, String timestamp);
-    List<OHLCV> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp, int limit);
-    OHLCV update(OHLCV ohlcv);
+    OHLCVEntity getBySymbolAndTimestamp(String symbol, String timestamp);
+    List<OHLCVEntity> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp, int limit);
+    OHLCVEntity update(OHLCVEntity ohlcv);
 }

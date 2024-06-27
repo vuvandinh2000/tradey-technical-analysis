@@ -1,10 +1,8 @@
 package infrastructure.dto;
 
-import com.tradey.technical_analysis.domain.entity.OHLCV;
+import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
 import com.tradey.technical_analysis.infrastructure.dto.OHLCVDTO;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +27,7 @@ public class OHLCVDTOTest {
                 .volume(expectedVolume)
                 .build();
 
-        OHLCV entity = dto.toEntity();
+        OHLCVEntity entity = dto.toEntity();
 
         assertEquals(expectedSymbol, entity.getSymbol());
         assertEquals(expectedTimestamp, entity.getTimestamp());
@@ -70,7 +68,7 @@ public class OHLCVDTOTest {
                 .diff_ma50_ma200(expectedDiffMa50Ma200)
                 .build();
 
-        OHLCV entity = dto.toEntity();
+        OHLCVEntity entity = dto.toEntity();
 
         assertEquals(expectedSymbol, entity.getSymbol());
         assertEquals(expectedTimestamp, entity.getTimestamp());

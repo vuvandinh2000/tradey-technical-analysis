@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.model.ReturnValue;
-import com.tradey.technical_analysis.domain.entity.OHLCV;
+import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
 import com.tradey.technical_analysis.domain.repositories.OHLCVRepository;
 import com.tradey.technical_analysis.infrastructure.dto.OHLCVDTO;
 
@@ -22,13 +22,13 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
     }
 
     @Override
-    public OHLCV getBySymbolAndTimestamp(String symbol, String timestamp) {
+    public OHLCVEntity getBySymbolAndTimestamp(String symbol, String timestamp) {
         Item item = table.getItem(new PrimaryKey("symbol", symbol, "timestamp", timestamp));
         return OHLCVItemToEntity(item);
     }
 
     @Override
-    public List<OHLCV> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp, int limit) {
+    public List<OHLCVEntity> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp, int limit) {
         RangeKeyCondition rangeKeyCondition = new RangeKeyCondition("timestamp").lt(timestamp);
         QuerySpec querySpec = new QuerySpec()
                 .withHashKey("symbol", symbol)
@@ -36,7 +36,7 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
                 .withMaxResultSize(limit);
         Iterable<Item> items = this.table.query(querySpec);
 
-        List<OHLCV> result = new ArrayList<>();
+        List<OHLCVEntity> result = new ArrayList<>();
         for (Item item: items) {
             result.add(OHLCVItemToEntity(item));
         }
@@ -45,7 +45,7 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
     }
 
     @Override
-    public OHLCV update(OHLCV ohlcv) {
+    public OHLCVEntity update(OHLCVEntity ohlcv) {
         UpdateItemSpec updateItemSpec = new UpdateItemSpec()
                 .withPrimaryKey("symbol", ohlcv.getSymbol(), "timestamp", ohlcv.getTimestamp())
                 .withAttributeUpdate(
@@ -58,7 +58,7 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
         return OHLCVItemToEntity(outcome.getItem());
     }
 
-    private OHLCV OHLCVItemToEntity(Item item) {
+    private OHLCVEntity OHLCVItemToEntity(Item item) {
         if (item == null) {
             return null;
         }

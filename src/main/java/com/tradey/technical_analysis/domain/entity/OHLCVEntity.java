@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class OHLCV {
+public class OHLCVEntity {
     private String symbol;
     private String timestamp;
     private double open;

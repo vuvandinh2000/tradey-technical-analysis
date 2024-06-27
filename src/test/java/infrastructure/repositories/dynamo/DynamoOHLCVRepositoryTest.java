@@ -3,8 +3,7 @@ package infrastructure.repositories.dynamo;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.internal.IteratorSupport;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
-import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
-import com.tradey.technical_analysis.domain.entity.OHLCV;
+import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
 import com.tradey.technical_analysis.infrastructure.repositories.dynamo.DynamoOHLCVRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +56,7 @@ public class DynamoOHLCVRepositoryTest {
                 .withDouble("diff_ma50_ma200", expectedDiffMa50Ma200);
         when(table.getItem(new PrimaryKey("symbol", expectedSymbol, "timestamp", expectedTimestamp))).thenReturn(item);
 
-        OHLCV entity = repository.getBySymbolAndTimestamp(expectedSymbol, expectedTimestamp);
+        OHLCVEntity entity = repository.getBySymbolAndTimestamp(expectedSymbol, expectedTimestamp);
 
         assertEquals(expectedSymbol, entity.getSymbol());
         assertEquals(expectedTimestamp, entity.getTimestamp());
@@ -85,7 +84,7 @@ public class DynamoOHLCVRepositoryTest {
         Item item = createTestOHLCVItem(expectedSymbol, expectedTimestamp, expectedOpen, expectedHigh, expectedLow, expectedClose, expectedVolume);
         when(table.getItem(new PrimaryKey("symbol", expectedSymbol, "timestamp", expectedTimestamp))).thenReturn(item);
 
-        OHLCV entity = repository.getBySymbolAndTimestamp(expectedSymbol, expectedTimestamp);
+        OHLCVEntity entity = repository.getBySymbolAndTimestamp(expectedSymbol, expectedTimestamp);
 
         assertEquals(expectedSymbol, entity.getSymbol());
         assertEquals(expectedTimestamp, entity.getTimestamp());
@@ -103,7 +102,7 @@ public class DynamoOHLCVRepositoryTest {
     public void  testGetBySymbolAndTimestamp_ItemDoesNotExist() {
         when(table.getItem(new PrimaryKey("symbol", "mockSymbol", "mockTimestamp", "mock"))).thenReturn(null);
 
-        OHLCV entity = repository.getBySymbolAndTimestamp("mockSymbol", "mockTimestamp");
+        OHLCVEntity entity = repository.getBySymbolAndTimestamp("mockSymbol", "mockTimestamp");
 
         assertNull(entity);
     }
@@ -135,7 +134,7 @@ public class DynamoOHLCVRepositoryTest {
         when(items.iterator()).thenReturn(mockIterator);
         when(table.query(any(QuerySpec.class))).thenReturn(items);
 
-        List<OHLCV> result = repository.getAllBySymbolOlderThanTimestamp("mock", "mock", 200);
+        List<OHLCVEntity> result = repository.getAllBySymbolOlderThanTimestamp("mock", "mock", 200);
 
         assertEquals(2, result.size());
         assertEquals(symbol, result.get(0).getSymbol());

@@ -1,6 +1,6 @@
 package com.tradey.technical_analysis.infrastructure.dto;
 
-import com.tradey.technical_analysis.domain.entity.OHLCV;
+import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +26,8 @@ public class OHLCVDTO {
     @Setter
     private Double diff_ma50_ma200;
 
-    public OHLCV toEntity() {
-        return OHLCV.builder()
+    public OHLCVEntity toEntity() {
+        return OHLCVEntity.builder()
                 .symbol(symbol)
                 .timestamp(timestamp)
                 .open(open)
