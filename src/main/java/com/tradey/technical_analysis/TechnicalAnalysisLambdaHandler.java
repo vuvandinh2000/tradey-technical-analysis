@@ -9,7 +9,7 @@ import com.tradey.technical_analysis.controllers.TechnicalAnalysisController;
 
 
 public class TechnicalAnalysisLambdaHandler implements RequestHandler<Object, Void> {
-    TechnicalAnalysisController technicalAnalysisUseCase;
+    TechnicalAnalysisController technicalAnalysisController;
 
 
     @Override
@@ -17,7 +17,7 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Object, Vo
     public Void handleRequest(Object event, Context context) {
         LambdaLogger logger = context.getLogger();
         logger.log("Start execute Technical Analysis...", LogLevel.INFO);
-        technicalAnalysisUseCase.execute("BTCUSDT");
+        technicalAnalysisController.execute("BINANCE", "BTCUSDT");
         return null;
     }
 }

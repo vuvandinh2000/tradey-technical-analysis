@@ -68,7 +68,8 @@ public class DynamoStateMachineRepositoryTest {
         String symbol = "BTCUSDT";
         String latestTimestampProcessed = "2024-01-01T00:00:00";
         String updatedAt = "2024-01-01T00:00:00";
-        TAStateMachineEntity entity = new TAStateMachineEntity(symbol, updatedAt, latestTimestampProcessed);
+        TAStateMachineEntity entity = new TAStateMachineEntity(symbol, updatedAt);
+        entity.setLatestTimestampProcessed(latestTimestampProcessed);
 
         repository.upsertTA(symbol, entity);
 
