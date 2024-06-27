@@ -24,7 +24,9 @@ public class StateMachineDTO {
         }
 
         String latestTimestampProcessed = (String) state.get("latest_timestamp_processed");
-        return new TAStateMachineEntity(symbol, updated_at, latestTimestampProcessed);
+        TAStateMachineEntity taStateMachineEntity = new TAStateMachineEntity(symbol, updated_at);
+        taStateMachineEntity.setLatestTimestampProcessed(latestTimestampProcessed);
+        return taStateMachineEntity;
     }
 
     public static StateMachineDTO fromEntity(TAStateMachineEntity entity) {

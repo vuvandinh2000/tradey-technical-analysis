@@ -41,7 +41,8 @@ public class StateMachineDTOTest {
         String expectedSymbol = "BTCUSDT";
         String expectedLatestTimestampProcessed = "2024-01-01T00:00:00";
         String expectedUpdatedAt = "2024-01-01T00:00:00";
-        TAStateMachineEntity entity = new TAStateMachineEntity(expectedSymbol, expectedUpdatedAt, expectedLatestTimestampProcessed);
+        TAStateMachineEntity entity = new TAStateMachineEntity(expectedSymbol, expectedUpdatedAt);
+        entity.setLatestTimestampProcessed(expectedLatestTimestampProcessed);
 
         StateMachineDTO dto = StateMachineDTO.fromEntity(entity);
 

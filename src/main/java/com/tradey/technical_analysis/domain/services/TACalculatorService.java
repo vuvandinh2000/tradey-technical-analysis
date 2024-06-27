@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class TACalculatorService {
-    public Double calculateMovingAverage(List<OHLCVEntity> listOHLCV, int period) {
-        if (listOHLCV.size() < period) {
+    public Double calculateMovingAverage(List<OHLCVEntity> ohlcvEntityList, int period) {
+        if (ohlcvEntityList.size() < period) {
             return null;
         }
 
-        double ma = listOHLCV.stream()
+        double ma = ohlcvEntityList.stream()
                 .map(OHLCVEntity::getClose)
                 .toList()
-                .subList(listOHLCV.size() - period, listOHLCV.size())
+                .subList(ohlcvEntityList.size() - period, ohlcvEntityList.size())
                 .stream()
                 .mapToDouble(Double::doubleValue)
                 .average()

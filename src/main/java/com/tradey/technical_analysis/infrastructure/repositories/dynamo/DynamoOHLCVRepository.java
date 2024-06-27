@@ -28,8 +28,8 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
     }
 
     @Override
-    public List<OHLCVEntity> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp, int limit) {
-        RangeKeyCondition rangeKeyCondition = new RangeKeyCondition("timestamp").lt(timestamp);
+    public List<OHLCVEntity> getAllBySymbolOlderEqualThanTimestamp(String symbol, String timestamp, int limit) {
+        RangeKeyCondition rangeKeyCondition = new RangeKeyCondition("timestamp").le(timestamp);
         QuerySpec querySpec = new QuerySpec()
                 .withHashKey("symbol", symbol)
                 .withRangeKeyCondition(rangeKeyCondition)
@@ -45,13 +45,13 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
     }
 
     @Override
-    public OHLCVEntity update(OHLCVEntity ohlcv) {
+    public OHLCVEntity updateTAMetricsBySymbolAndTimestamp(String symbol, String timestamp, Double ma50, Double ma200, Double diffMa50Ma200) {
         UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-                .withPrimaryKey("symbol", ohlcv.getSymbol(), "timestamp", ohlcv.getTimestamp())
+                .withPrimaryKey("symbol", symbol, "timestamp", timestamp)
                 .withAttributeUpdate(
-                        new AttributeUpdate("ma50").put(ohlcv.getMa50()),
-                        new AttributeUpdate("ma200").put(ohlcv.getMa200()),
-                        new AttributeUpdate("diff_ma50_ma200").put(ohlcv.getDiffMa50Ma200())
+                        new AttributeUpdate("ma50").put(ma50),
+                        new AttributeUpdate("ma200").put(ma200),
+                        new AttributeUpdate("diff_ma50_ma200").put(diffMa50Ma200)
                 )
                 .withReturnValues(ReturnValue.UPDATED_NEW);
         UpdateItemOutcome outcome = this.table.updateItem(updateItemSpec);

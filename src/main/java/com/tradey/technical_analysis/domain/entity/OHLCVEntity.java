@@ -17,4 +17,8 @@ public class OHLCVEntity {
     private Double ma50;
     private Double ma200;
     private Double diffMa50Ma200;
+
+    public boolean hasAllTAMetricsAreNull() {
+        return ma50 == null && ma200 == null && diffMa50Ma200 == null;
+    }
 }
