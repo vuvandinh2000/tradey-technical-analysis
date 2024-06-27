@@ -5,12 +5,13 @@ import com.tradey.technical_analysis.domain.entity.OHLCV;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NonNull;
 
 @Getter
 @Builder
 public class OHLCVDTO {
-    private final String symbol;
-    private final String timestamp;
+    private final @NonNull String symbol;
+    private final @NonNull String timestamp;
     private final double open;
     private final double high;
     private final double low;
