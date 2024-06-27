@@ -4,8 +4,6 @@ import com.tradey.technical_analysis.domain.entity.SymbolInfoEntity;
 import com.tradey.technical_analysis.infrastructure.dto.SymbolInfoDTO;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigInteger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SymbolInfoDTOTest {
@@ -13,7 +11,7 @@ public class SymbolInfoDTOTest {
     public void testToEntity() {
         String expectedExchangeType = "BINANCE";
         String expectedSymbol = "BTCUSDT";
-        BigInteger expectedOnboardDate = new BigInteger("1714633200000");
+        long expectedOnboardDate = 1714633200000L;
 
         SymbolInfoDTO dto = new SymbolInfoDTO(expectedExchangeType, expectedSymbol, expectedOnboardDate);
 

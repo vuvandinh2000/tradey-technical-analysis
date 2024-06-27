@@ -8,8 +8,6 @@ import com.tradey.technical_analysis.domain.entity.SymbolInfoEntity;
 import com.tradey.technical_analysis.domain.repositories.SymbolInfoRepository;
 import com.tradey.technical_analysis.infrastructure.dto.SymbolInfoDTO;
 
-import java.math.BigInteger;
-
 import static com.tradey.technical_analysis.pkgs.Constants.*;
 
 public class DynamoSymbolInfoRepository implements SymbolInfoRepository {
@@ -27,7 +25,7 @@ public class DynamoSymbolInfoRepository implements SymbolInfoRepository {
             return null;
         }
 
-        BigInteger onboardDate = item.getBigInteger("onboard_date");
+        long onboardDate = item.getLong("onboard_date");
 
         return new SymbolInfoDTO(exchangeType, symbol, onboardDate).toEntity();
     }
