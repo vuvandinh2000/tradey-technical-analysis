@@ -5,8 +5,8 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "sam-tradey-market-info-app"
-s3_bucket = "tradey-app"
+stack_name = "sam-tradey-technical-analysis-app"
+s3_bucket = "source-tradey-technical-analysis"
 region = "ap-southeast-1"
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = false

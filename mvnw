@@ -123,7 +123,7 @@ maven-mvnd-*bin.*)
   :Darwin*arm64) distributionPlatform=darwin-aarch64 ;;
   :Linux*x86_64*) distributionPlatform=linux-amd64 ;;
   *)
-    echo "Cannot detect native platform for mvnd on $(uname)-$(uname -m), use pure java version" >&2
+    echo "Cannot detect native platform for mvnd on $(uname)-$(uname -m), use pure w version" >&2
     distributionPlatform=linux-amd64
     ;;
   esac
