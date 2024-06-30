@@ -14,10 +14,9 @@ import javax.inject.Inject;
 public class TechnicalAnalysisLambdaHandler implements RequestHandler<Object, Void> {
     @Inject
     TechnicalAnalysisController technicalAnalysisController;
-    private final TechnicalAnalysisComponent technicalAnalysisComponent;
 
     public TechnicalAnalysisLambdaHandler() {
-        technicalAnalysisComponent = DaggerTechnicalAnalysisComponent.builder().build();
+        TechnicalAnalysisComponent technicalAnalysisComponent = DaggerTechnicalAnalysisComponent.builder().build();
         technicalAnalysisComponent.inject(this);
     }
 
@@ -25,7 +24,7 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Object, Vo
     @Override
     public Void handleRequest(Object event, Context context) {
         log.info("Start execute Technical Analysis...");
-        technicalAnalysisController.execute("BINANCE", "BTCUSDT");
+        technicalAnalysisController.execute("FUTURES-U_MARGINED", "BTCUSDT");
         return null;
     }
 }
