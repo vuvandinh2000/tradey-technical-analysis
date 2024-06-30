@@ -1,4 +1,4 @@
-.PHONY: clean install test resolve
+.PHONY: clean install build test resolve sam_invoke
 
 clean:
 	mvn clean
@@ -11,3 +11,9 @@ test:
 
 resolve:
 	mvn dependency:resolve
+
+build:
+	mvn clean install
+
+sam_invoke:
+	sam local invoke tradeytechnicalanalysis -t tradey-technical-analysis.yml
