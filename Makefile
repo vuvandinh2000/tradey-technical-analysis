@@ -15,5 +15,8 @@ resolve:
 build:
 	mvn clean install
 
+sam_build:
+	sam build -t tradey-technical-analysis.yml --use-container
+
 sam_invoke:
 	sam local invoke tradeytechnicalanalysis -t tradey-technical-analysis.yml
