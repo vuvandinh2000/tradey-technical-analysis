@@ -13,7 +13,7 @@ resolve:
 	mvn dependency:resolve
 
 build:
-	mvn clean install -B
+	mvn clean install
 
 sam_build:
 	sam build -t tradey-technical-analysis.yml --use-container
