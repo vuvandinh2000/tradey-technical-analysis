@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SymbolInfoDTOTest {
     @Test
     public void testToEntity() {
-        String expectedExchangeType = "BINANCE";
+        String expectedExchangeType = "FUTURES-U_MARGINED";
         String expectedSymbol = "BTCUSDT";
         long expectedOnboardDate = 1714633200000L;
 
