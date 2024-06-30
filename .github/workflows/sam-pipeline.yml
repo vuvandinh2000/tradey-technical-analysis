@@ -15,12 +15,15 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Install dependencies
+        run: |
+          mvn resolve
       - name: Run unit tests
         run: |
-          mvn test
+          make test
       - name: Build project
         run: |
-          mvn clean install
+          mvn build
       - uses: aws-actions/setup-sam@v2
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
