@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -39,7 +40,9 @@ public class TechnicalAnalysisController {
                 log.error(messageError);
                 throw new NoSuchElementException(messageError);
             }
-            currentTimestamp = Time.formatUnixMsToDateTime(onboardDate).format(Time.formatter);
+
+            // adhoc logic?
+            currentTimestamp = Time.formatUnixMsToDateTime(onboardDate).plusHours(25).minus(1, ChronoUnit.MILLIS).format(Time.formatter);
         }
 
         OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, currentTimestamp);
