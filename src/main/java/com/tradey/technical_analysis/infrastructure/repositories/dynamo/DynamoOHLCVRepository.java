@@ -26,6 +26,10 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
     @Override
     public OHLCVEntity getBySymbolAndTimestamp(String symbol, String timestamp) {
         Item item = table.getItem(new PrimaryKey("symbol", symbol, "timestamp", timestamp));
+        if (item == null) {
+            String messageWarning = String.format("Not existed OHLCV with symbol='%s', timestamp='%s'", symbol, timestamp);
+            log.warn(messageWarning);
+        }
         return OHLCVItemToEntity(item);
     }
 

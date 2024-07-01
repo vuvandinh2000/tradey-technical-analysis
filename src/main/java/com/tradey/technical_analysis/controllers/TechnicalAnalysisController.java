@@ -45,6 +45,8 @@ public class TechnicalAnalysisController {
             currentTimestamp = Time.formatUnixMsToDateTime(onboardDate).plusHours(25).minus(1, ChronoUnit.MILLIS).format(Time.formatter);
         }
 
+        String messageInfo = String.format("Handling for symbol='%s', currentTimestamp='%s'...", symbol, currentTimestamp);
+        log.info(messageInfo);
         OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, currentTimestamp);
 
         if (ohlcvEntity != null) {
@@ -72,7 +74,7 @@ public class TechnicalAnalysisController {
                 OHLCVEntity updatedOHLCVEntity = ohlcvService.updateTAMetricsBySymbolAndTimestamp(symbol, currentTimestamp, ma50, ma200, diffMa50Ma200);
 
                 if (updatedOHLCVEntity != null) {
-                    String messageInfo = String.format(
+                    messageInfo = String.format(
                             "Successfully updated for OHLCV of symbol='%s', timestamp='%s', MA50='%f', MA200='%f', MA50-MA200='%f'.",
                             updatedOHLCVEntity.getSymbol(),
                             updatedOHLCVEntity.getTimestamp(),
