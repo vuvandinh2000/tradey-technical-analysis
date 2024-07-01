@@ -7,9 +7,11 @@ import com.tradey.technical_analysis.domain.services.SymbolInfoService;
 import com.tradey.technical_analysis.domain.services.TACalculatorService;
 import com.tradey.technical_analysis.domain.services.StateMachineService;
 
+import com.tradey.technical_analysis.pkgs.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,8 +29,8 @@ public class TechnicalAnalysisController {
         // Find the oldest timestamp of OHLCV that has not calculated TA Metrics yet.
         String currentTimestamp;
         if (taStateMachineEntity != null) {
-            long latestTimestampProcessed = Long.parseLong(taStateMachineEntity.getLatestTimestampProcessed());
-            currentTimestamp = Long.toString(latestTimestampProcessed + 3600);
+            ZonedDateTime latestTimestampProcessed = ZonedDateTime.parse(taStateMachineEntity.getLatestTimestampProcessed());
+            currentTimestamp = latestTimestampProcessed.plusHours(1).toString();
         }
         else {
             Long onboardDate = symbolInfoService.getOnboardDate(exchangeType, symbol);
@@ -37,7 +39,7 @@ public class TechnicalAnalysisController {
                 log.error(messageError);
                 throw new NoSuchElementException(messageError);
             }
-            currentTimestamp = Long.toString(onboardDate);
+            currentTimestamp = Time.formatUnixMsToDateTime(onboardDate).toString();
         }
 
         OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, currentTimestamp);
