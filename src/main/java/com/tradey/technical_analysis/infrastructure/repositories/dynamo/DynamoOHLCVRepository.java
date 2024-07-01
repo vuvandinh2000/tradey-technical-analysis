@@ -7,12 +7,14 @@ import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
 import com.tradey.technical_analysis.domain.repositories.OHLCVRepository;
 import com.tradey.technical_analysis.infrastructure.dto.OHLCVDTO;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.tradey.technical_analysis.pkgs.Constants.ohlcvTableName;
 
+@Slf4j
 public class DynamoOHLCVRepository implements OHLCVRepository {
 
     private final Table table;
@@ -46,14 +48,38 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
 
     @Override
     public OHLCVEntity updateTAMetricsBySymbolAndTimestamp(String symbol, String timestamp, Double ma50, Double ma200, Double diffMa50Ma200) {
+        if (ma50 == null && ma200 == null && diffMa50Ma200 == null) {
+            String messageWarning = String.format("Skipped update OHLCV due to null of MA50, MA200 and Cross(MA50, MA200) for symbol='%s', timestamp='%s", symbol, timestamp);
+            log.warn(messageWarning);
+            return null;
+        }
+
         UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-                .withPrimaryKey("symbol", symbol, "timestamp", timestamp)
-                .withAttributeUpdate(
-                        new AttributeUpdate("ma50").put(ma50),
-                        new AttributeUpdate("ma200").put(ma200),
-                        new AttributeUpdate("diff_ma50_ma200").put(diffMa50Ma200)
-                )
-                .withReturnValues(ReturnValue.UPDATED_NEW);
+                .withPrimaryKey("symbol", symbol, "timestamp", timestamp);
+
+        if (ma50 != null) {
+            updateItemSpec.withAttributeUpdate(new AttributeUpdate("ma50").put(ma50));
+        }
+        else {
+            String messageWarning = String.format("Not existed MA50 of symbol='%s', timestamp='%s", symbol, timestamp);
+            log.warn(messageWarning);
+        }
+        if (ma200 != null) {
+            updateItemSpec.withAttributeUpdate(new AttributeUpdate("ma200").put(ma200));
+        }
+        else {
+            String messageWarning = String.format("Not existed MA200 of symbol='%s', timestamp='%s", symbol, timestamp);
+            log.warn(messageWarning);
+        }
+        if (diffMa50Ma200 != null) {
+            updateItemSpec.withAttributeUpdate(new AttributeUpdate("diff_ma50_ma200").put(diffMa50Ma200));
+        }
+        else {
+            String messageWarning = String.format("Not existed Cross(MA50, MA200) of symbol='%s', timestamp='%s", symbol, timestamp);
+            log.warn(messageWarning);
+        }
+
+        updateItemSpec.withReturnValues(ReturnValue.UPDATED_NEW);
         UpdateItemOutcome outcome = this.table.updateItem(updateItemSpec);
         return OHLCVItemToEntity(outcome.getItem());
     }

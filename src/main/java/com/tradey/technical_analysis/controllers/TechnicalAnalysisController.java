@@ -71,15 +71,17 @@ public class TechnicalAnalysisController {
 
                 OHLCVEntity updatedOHLCVEntity = ohlcvService.updateTAMetricsBySymbolAndTimestamp(symbol, currentTimestamp, ma50, ma200, diffMa50Ma200);
 
-                String messageInfo = String.format(
-                        "Successfully updated for OHLCV of symbol='%s', timestamp='%s', MA50='%f', MA200='%f', MA50-MA200='%f'.",
-                        updatedOHLCVEntity.getSymbol(),
-                        updatedOHLCVEntity.getTimestamp(),
-                        updatedOHLCVEntity.getMa50(),
-                        updatedOHLCVEntity.getMa200(),
-                        updatedOHLCVEntity.getDiffMa50Ma200()
-                        );
-                log.info(messageInfo);
+                if (updatedOHLCVEntity != null) {
+                    String messageInfo = String.format(
+                            "Successfully updated for OHLCV of symbol='%s', timestamp='%s', MA50='%f', MA200='%f', MA50-MA200='%f'.",
+                            updatedOHLCVEntity.getSymbol(),
+                            updatedOHLCVEntity.getTimestamp(),
+                            updatedOHLCVEntity.getMa50(),
+                            updatedOHLCVEntity.getMa200(),
+                            updatedOHLCVEntity.getDiffMa50Ma200()
+                    );
+                    log.info(messageInfo);
+                }
             }
             else {
                 String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has unprocessed state but exists TAMetrics.", symbol, currentTimestamp);
