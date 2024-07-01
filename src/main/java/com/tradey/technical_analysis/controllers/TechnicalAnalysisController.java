@@ -30,7 +30,7 @@ public class TechnicalAnalysisController {
         String currentTimestamp;
         if (taStateMachineEntity != null) {
             ZonedDateTime latestTimestampProcessed = ZonedDateTime.parse(taStateMachineEntity.getLatestTimestampProcessed());
-            currentTimestamp = latestTimestampProcessed.plusHours(1).toString();
+            currentTimestamp = latestTimestampProcessed.plusHours(1).format(Time.formatter);
         }
         else {
             Long onboardDate = symbolInfoService.getOnboardDate(exchangeType, symbol);
@@ -39,7 +39,7 @@ public class TechnicalAnalysisController {
                 log.error(messageError);
                 throw new NoSuchElementException(messageError);
             }
-            currentTimestamp = Time.formatUnixMsToDateTime(onboardDate).toString();
+            currentTimestamp = Time.formatUnixMsToDateTime(onboardDate).format(Time.formatter);
         }
 
         OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, currentTimestamp);
