@@ -83,7 +83,7 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
             log.warn(messageWarning);
         }
 
-        updateItemSpec.withReturnValues(ReturnValue.UPDATED_NEW);
+        updateItemSpec.withReturnValues(ReturnValue.ALL_NEW);
         UpdateItemOutcome outcome = this.table.updateItem(updateItemSpec);
         return OHLCVItemToEntity(outcome.getItem());
     }
