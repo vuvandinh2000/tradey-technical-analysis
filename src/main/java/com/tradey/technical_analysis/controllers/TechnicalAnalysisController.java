@@ -4,9 +4,13 @@ import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
 import com.tradey.technical_analysis.domain.services.OHLCVService;
 import com.tradey.technical_analysis.domain.services.TACalculatorService;
 
+import com.tradey.technical_analysis.infrastructure.dto.HTTPResponse;
+import com.tradey.technical_analysis.pkgs.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -15,9 +19,14 @@ public class TechnicalAnalysisController {
     private final OHLCVService ohlcvService;
     private final TACalculatorService technicalAnalysisService;
 
-    public void execute(String exchangeType, String symbol, String timestamp) {
+    public HTTPResponse execute(String exchangeType, String symbol, String timestamp) {
         log.info(String.format("Handling for symbol='%s', timestamp='%s'...", symbol, timestamp));
         OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, timestamp);
+
+        HashMap<String, Object> returned_data = new HashMap<>();
+        returned_data.put("exchange_type", exchangeType);
+        returned_data.put("symbol", symbol);
+        returned_data.put("timestamp", timestamp);
 
         if (ohlcvEntity != null) {
             if (ohlcvEntity.hasAllTAMetricsAreNull()) {
@@ -44,25 +53,34 @@ public class TechnicalAnalysisController {
                 OHLCVEntity updatedOHLCVEntity = ohlcvService.updateTAMetricsBySymbolAndTimestamp(symbol, timestamp, ma50, ma200, diffMa50Ma200);
 
                 if (updatedOHLCVEntity != null) {
-                    String messageInfo = String.format(
-                            "Successfully updated for OHLCV of symbol='%s', timestamp='%s', MA50='%f', MA200='%f', MA50-MA200='%f'.",
-                            updatedOHLCVEntity.getSymbol(),
-                            updatedOHLCVEntity.getTimestamp(),
-                            updatedOHLCVEntity.getMa50(),
-                            updatedOHLCVEntity.getMa200(),
-                            updatedOHLCVEntity.getDiffMa50Ma200()
-                    );
-                    log.info(messageInfo);
+                    returned_data.put("ma50", updatedOHLCVEntity.getMa50());
+                    returned_data.put("ma200", updatedOHLCVEntity.getMa200());
+                    returned_data.put("diff_ma50_ma200", updatedOHLCVEntity.getDiffMa50Ma200());
+                    return new HTTPResponse(
+                            HttpStatus.SC_OK,
+                            "Successfully calculate Technical Analysis Metrics.",
+                            returned_data,
+                            Time.getCurrentTimestamp().format(Time.formatter)
+                        );
                 }
             }
             else {
-                String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has unprocessed state but exists TAMetrics.", symbol, timestamp);
-                log.warn(messageWarning);
+                return new HTTPResponse(
+                        HttpStatus.SC_CONFLICT,
+                        "OHLCV has already been calculated Technical Analysis Metrics.",
+                        returned_data,
+                        Time.getCurrentTimestamp().format(Time.formatter)
+                );
             }
         }
         else {
-            String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has not crawled from '%s' yet.", symbol, timestamp, exchangeType);
-            log.warn(messageWarning);
+            return new HTTPResponse(
+                    HttpStatus.SC_NOT_FOUND,
+                    "OHLCV has not been crawled yet.",
+                    returned_data,
+                    Time.getCurrentTimestamp().format(Time.formatter)
+            );
         }
+        return null;
     }
 }

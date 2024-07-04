@@ -6,13 +6,14 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.tradey.technical_analysis.config.TechnicalAnalysisComponent;
 import com.tradey.technical_analysis.config.DaggerTechnicalAnalysisComponent;
 import com.tradey.technical_analysis.controllers.TechnicalAnalysisController;
+import com.tradey.technical_analysis.infrastructure.dto.HTTPResponse;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.inject.Inject;
 import java.util.Map;
 
-
 @Slf4j
-public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String, String>, Void> {
+public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String, String>, HTTPResponse> {
     @Inject
     TechnicalAnalysisController technicalAnalysisController;
 
@@ -23,7 +24,7 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
 
 
     @Override
-    public Void handleRequest(Map<String, String> event, Context context) {
+    public HTTPResponse handleRequest(Map<String, String> event, Context context) {
         String exchangeType = event.get("exchange_type");
         String symbol = event.get("symbol");
         String timestamp = event.get("timestamp");
@@ -38,7 +39,6 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
             log.error("'timestamp' is required in input event.");
         }
         log.info("Start execute Technical Analysis...");
-        technicalAnalysisController.execute(exchangeType, symbol, timestamp);
-        return null;
+        return technicalAnalysisController.execute(exchangeType, symbol, timestamp);
     }
 }
