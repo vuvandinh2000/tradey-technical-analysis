@@ -51,7 +51,7 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
     }
 
     @Override
-    public OHLCVEntity updateTAMetricsBySymbolAndTimestamp(String symbol, String timestamp, Double ma50, Double ma200, Double diffMa50Ma200) {
+    public OHLCVEntity updateTAMetrics(String symbol, String timestamp, Double ma50, Double ma200, Double diffMa50Ma200) {
         if (ma50 == null && ma200 == null && diffMa50Ma200 == null) {
             String messageWarning = String.format("Skipped update OHLCV due to null of MA50, MA200 and Cross(MA50, MA200) for symbol='%s', timestamp='%s", symbol, timestamp);
             log.warn(messageWarning);
@@ -61,29 +61,30 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
         UpdateItemSpec updateItemSpec = new UpdateItemSpec()
                 .withPrimaryKey("symbol", symbol, "timestamp", timestamp);
 
+        List<AttributeUpdate> attributeUpdateList = new ArrayList<>();
         if (ma50 != null) {
-            updateItemSpec.withAttributeUpdate(new AttributeUpdate("ma50").put(ma50));
+            attributeUpdateList.add(new AttributeUpdate("ma50").put(ma50));
         }
         else {
             String messageWarning = String.format("Not existed MA50 of symbol='%s', timestamp='%s", symbol, timestamp);
             log.warn(messageWarning);
         }
         if (ma200 != null) {
-            updateItemSpec.withAttributeUpdate(new AttributeUpdate("ma200").put(ma200));
+            attributeUpdateList.add(new AttributeUpdate("ma200").put(ma200));
         }
         else {
             String messageWarning = String.format("Not existed MA200 of symbol='%s', timestamp='%s", symbol, timestamp);
             log.warn(messageWarning);
         }
         if (diffMa50Ma200 != null) {
-            updateItemSpec.withAttributeUpdate(new AttributeUpdate("diff_ma50_ma200").put(diffMa50Ma200));
+            attributeUpdateList.add(new AttributeUpdate("diff_ma50_ma200").put(diffMa50Ma200));
         }
         else {
             String messageWarning = String.format("Not existed Cross(MA50, MA200) of symbol='%s', timestamp='%s", symbol, timestamp);
             log.warn(messageWarning);
         }
 
-        updateItemSpec.withReturnValues(ReturnValue.ALL_NEW);
+        updateItemSpec.withAttributeUpdate(attributeUpdateList).withReturnValues(ReturnValue.ALL_NEW);
         UpdateItemOutcome outcome = this.table.updateItem(updateItemSpec);
         return OHLCVItemToEntity(outcome.getItem());
     }
