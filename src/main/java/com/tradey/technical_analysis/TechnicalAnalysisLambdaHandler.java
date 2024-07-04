@@ -28,6 +28,7 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
         String exchangeType = event.get("exchange_type");
         String symbol = event.get("symbol");
         String timestamp = event.get("timestamp");
+        boolean force = Boolean.parseBoolean(event.get("force"));
         if (exchangeType == null) {
             exchangeType = "FUTURES-U_MARGINED";
             log.warn(String.format("Event has 'exchange_type' is null, use default='%s'", exchangeType));
@@ -39,6 +40,6 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
             log.error("'timestamp' is required in input event.");
         }
         log.info("Start execute Technical Analysis...");
-        return technicalAnalysisController.execute(exchangeType, symbol, timestamp);
+        return technicalAnalysisController.execute(exchangeType, symbol, timestamp, force);
     }
 }
