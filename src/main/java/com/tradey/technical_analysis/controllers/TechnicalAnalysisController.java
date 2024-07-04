@@ -19,7 +19,7 @@ public class TechnicalAnalysisController {
     private final OHLCVService ohlcvService;
     private final TACalculatorService technicalAnalysisService;
 
-    public HTTPResponse execute(String exchangeType, String symbol, String timestamp) {
+    public HTTPResponse execute(String exchangeType, String symbol, String timestamp, boolean force) {
         log.info(String.format("Handling for symbol='%s', timestamp='%s'...", symbol, timestamp));
         OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, timestamp);
 
@@ -29,7 +29,7 @@ public class TechnicalAnalysisController {
         returned_data.put("timestamp", timestamp);
 
         if (ohlcvEntity != null) {
-            if (ohlcvEntity.hasAllTAMetricsAreNull()) {
+            if (ohlcvEntity.hasAllTAMetricsAreNull() || force) {
                 // All TAMetrics are null: get all OHLCV are older than currentTimestamp
                 List<OHLCVEntity> ohlcvEntityList = ohlcvService.getAllBySymbolOlderThanTimestamp(symbol, timestamp, 200);
 
