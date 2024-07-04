@@ -10,6 +10,7 @@ import com.tradey.technical_analysis.infrastructure.dto.HTTPResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -41,5 +42,16 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
         }
         log.info("Start execute Technical Analysis...");
         return technicalAnalysisController.execute(exchangeType, symbol, timestamp, force);
+    }
+
+    public static void main(String[] args) {
+        TechnicalAnalysisLambdaHandler technicalAnalysisLambdaHandler = new TechnicalAnalysisLambdaHandler();
+        Map<String, String> event = new HashMap<>();
+        event.put("exchange_type", "FUTURES-U_MARGINED");
+        event.put("symbol", "BTCUSDT");
+        event.put("timestamp", "2021-12-20T13:59:59.999000+00:00");
+        event.put("force", "true");
+
+        technicalAnalysisLambdaHandler.handleRequest(event, null);
     }
 }

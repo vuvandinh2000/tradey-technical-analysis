@@ -31,7 +31,7 @@ public class TechnicalAnalysisController {
         if (ohlcvEntity != null) {
             if (ohlcvEntity.hasAllTAMetricsAreNull() || force) {
                 // All TAMetrics are null: get all OHLCV are older than currentTimestamp
-                List<OHLCVEntity> ohlcvEntityList = ohlcvService.getAllBySymbolOlderThanTimestamp(symbol, timestamp, 200);
+                List<OHLCVEntity> ohlcvEntityList = ohlcvService.getAllBySymbolAndLETimestamp(symbol, timestamp, 200);
 
                 // Calculate MA50, MA200, diffMa50Ma200
                 Double diffMa50Ma200 = null;
