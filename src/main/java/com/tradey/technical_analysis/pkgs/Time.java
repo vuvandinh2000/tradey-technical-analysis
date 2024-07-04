@@ -11,4 +11,8 @@ public class Time {
     public static ZonedDateTime formatUnixMsToDateTime(long unixMs) {
         return ZonedDateTime.ofInstant(Instant.ofEpochMilli(unixMs), ZoneOffset.UTC);
     }
+
+    public static ZonedDateTime getCurrentTimestamp() {
+        return ZonedDateTime.now(ZoneOffset.UTC);
+    }
 }
