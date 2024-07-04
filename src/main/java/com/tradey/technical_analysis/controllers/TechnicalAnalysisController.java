@@ -1,80 +1,50 @@
 package com.tradey.technical_analysis.controllers;
 
 import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
-import com.tradey.technical_analysis.domain.entity.TAStateMachineEntity;
 import com.tradey.technical_analysis.domain.services.OHLCVService;
-import com.tradey.technical_analysis.domain.services.SymbolInfoService;
 import com.tradey.technical_analysis.domain.services.TACalculatorService;
-import com.tradey.technical_analysis.domain.services.StateMachineService;
 
-import com.tradey.technical_analysis.pkgs.Time;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @RequiredArgsConstructor
 public class TechnicalAnalysisController {
-    private final StateMachineService stateMachineService;
-    private final SymbolInfoService symbolInfoService;
     private final OHLCVService ohlcvService;
     private final TACalculatorService technicalAnalysisService;
 
-    public void execute(String exchangeType, String symbol) {
-        TAStateMachineEntity taStateMachineEntity = stateMachineService.getTA(symbol);
-
-        // Find the oldest timestamp of OHLCV that has not calculated TA Metrics yet.
-        String currentTimestamp;
-        if (taStateMachineEntity != null) {
-            ZonedDateTime latestTimestampProcessed = ZonedDateTime.parse(taStateMachineEntity.getLatestTimestampProcessed());
-            currentTimestamp = latestTimestampProcessed.plusHours(1).format(Time.formatter);
-        }
-        else {
-            Long onboardDate = symbolInfoService.getOnboardDate(exchangeType, symbol);
-            if (onboardDate == null) {
-                String messageError = String.format("Can not find onboard date of symbol='%s' in exchange='%s'", exchangeType, symbol);
-                log.error(messageError);
-                throw new NoSuchElementException(messageError);
-            }
-
-            // adhoc logic?
-            currentTimestamp = Time.formatUnixMsToDateTime(onboardDate).plusHours(25).minus(1, ChronoUnit.MILLIS).format(Time.formatter);
-        }
-
-        String messageInfo = String.format("Handling for symbol='%s', currentTimestamp='%s'...", symbol, currentTimestamp);
-        log.info(messageInfo);
-        OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, currentTimestamp);
+    public void execute(String exchangeType, String symbol, String timestamp) {
+        log.info(String.format("Handling for symbol='%s', timestamp='%s'...", symbol, timestamp));
+        OHLCVEntity ohlcvEntity = ohlcvService.getBySymbolAndTimestamp(symbol, timestamp);
 
         if (ohlcvEntity != null) {
             if (ohlcvEntity.hasAllTAMetricsAreNull()) {
                 // All TAMetrics are null: get all OHLCV are older than currentTimestamp
-                List<OHLCVEntity> ohlcvEntityList = ohlcvService.getAllBySymbolOlderThanTimestamp(symbol, currentTimestamp, 200);
+                List<OHLCVEntity> ohlcvEntityList = ohlcvService.getAllBySymbolOlderThanTimestamp(symbol, timestamp, 200);
 
                 // Calculate MA50, MA200, diffMa50Ma200
                 Double diffMa50Ma200 = null;
 
                 Double ma50 = technicalAnalysisService.calculateMovingAverage(ohlcvEntityList, 50);
                 if (ma50 == null) {
-                    String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has less than 50 older OHLCV.", symbol, currentTimestamp);
+                    String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has less than 50 older OHLCV.", symbol, timestamp);
                     log.warn(messageWarning);
                 }
                 Double ma200 = technicalAnalysisService.calculateMovingAverage(ohlcvEntityList, 200);
                 if (ma200 == null) {
-                    String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has less than 200 older OHLCV.", symbol, currentTimestamp);
+                    String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has less than 200 older OHLCV.", symbol, timestamp);
                     log.warn(messageWarning);
                 }
                 if (ma200 != null && ma50 != null) {
                     diffMa50Ma200 = ma50 - ma200;
                 }
 
-                OHLCVEntity updatedOHLCVEntity = ohlcvService.updateTAMetricsBySymbolAndTimestamp(symbol, currentTimestamp, ma50, ma200, diffMa50Ma200);
+                OHLCVEntity updatedOHLCVEntity = ohlcvService.updateTAMetricsBySymbolAndTimestamp(symbol, timestamp, ma50, ma200, diffMa50Ma200);
 
                 if (updatedOHLCVEntity != null) {
-                    messageInfo = String.format(
+                    String messageInfo = String.format(
                             "Successfully updated for OHLCV of symbol='%s', timestamp='%s', MA50='%f', MA200='%f', MA50-MA200='%f'.",
                             updatedOHLCVEntity.getSymbol(),
                             updatedOHLCVEntity.getTimestamp(),
@@ -86,21 +56,13 @@ public class TechnicalAnalysisController {
                 }
             }
             else {
-                String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has unprocessed state but exists TAMetrics.", symbol, currentTimestamp);
+                String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has unprocessed state but exists TAMetrics.", symbol, timestamp);
                 log.warn(messageWarning);
             }
         }
         else {
-            String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has not crawled from '%s' yet.", symbol, currentTimestamp, exchangeType);
+            String messageWarning = String.format("OHLCV of symbol='%s', timestamp='%s' has not crawled from '%s' yet.", symbol, timestamp, exchangeType);
             log.warn(messageWarning);
-            return;
         }
-
-        // Update state: latestTimestampProcessed = currentTimestamp
-        if (taStateMachineEntity == null) {
-            taStateMachineEntity = new TAStateMachineEntity(symbol, Long.toString(System.currentTimeMillis()));
-        }
-        taStateMachineEntity.setLatestTimestampProcessed(currentTimestamp);
-        stateMachineService.upsertTA(symbol, taStateMachineEntity);
     }
 }
