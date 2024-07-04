@@ -15,8 +15,8 @@ public class OHLCVService {
         return ohlcvRepository.getBySymbolAndTimestamp(symbol, timestamp);
     }
 
-    public List<OHLCVEntity> getAllBySymbolOlderThanTimestamp(String symbol, String timestamp, int limit){
-        return ohlcvRepository.getAllBySymbolOlderEqualThanTimestamp(symbol, timestamp, limit);
+    public List<OHLCVEntity> getAllBySymbolAndLETimestamp(String symbol, String timestamp, int limit){
+        return ohlcvRepository.getAllBySymbolAndLETimestamp(symbol, timestamp, limit);
     }
 
     public OHLCVEntity updateTAMetricsBySymbolAndTimestamp(String symbol, String timestamp, Double ma50, Double ma200, Double diffMa50Ma200) {

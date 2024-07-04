@@ -134,7 +134,7 @@ public class DynamoOHLCVRepositoryTest {
         when(items.iterator()).thenReturn(mockIterator);
         when(table.query(any(QuerySpec.class))).thenReturn(items);
 
-        List<OHLCVEntity> result = repository.getAllBySymbolOlderEqualThanTimestamp("mock", "mock", 200);
+        List<OHLCVEntity> result = repository.getAllBySymbolAndLETimestamp("mock", "mock", 200);
 
         assertEquals(2, result.size());
         assertEquals(symbol, result.get(0).getSymbol());

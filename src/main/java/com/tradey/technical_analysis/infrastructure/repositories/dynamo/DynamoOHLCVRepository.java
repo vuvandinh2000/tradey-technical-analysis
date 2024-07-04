@@ -34,12 +34,13 @@ public class DynamoOHLCVRepository implements OHLCVRepository {
     }
 
     @Override
-    public List<OHLCVEntity> getAllBySymbolOlderEqualThanTimestamp(String symbol, String timestamp, int limit) {
+    public List<OHLCVEntity> getAllBySymbolAndLETimestamp(String symbol, String timestamp, int limit) {
         RangeKeyCondition rangeKeyCondition = new RangeKeyCondition("timestamp").le(timestamp);
         QuerySpec querySpec = new QuerySpec()
                 .withHashKey("symbol", symbol)
                 .withRangeKeyCondition(rangeKeyCondition)
-                .withMaxResultSize(limit);
+                .withMaxResultSize(limit)
+                .withScanIndexForward(false);
         Iterable<Item> items = this.table.query(querySpec);
 
         List<OHLCVEntity> result = new ArrayList<>();
