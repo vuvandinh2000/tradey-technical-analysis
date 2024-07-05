@@ -7,6 +7,7 @@ import com.tradey.technical_analysis.config.TechnicalAnalysisComponent;
 import com.tradey.technical_analysis.config.DaggerTechnicalAnalysisComponent;
 import com.tradey.technical_analysis.controllers.TechnicalAnalysisController;
 import com.tradey.technical_analysis.infrastructure.dto.HTTPResponse;
+import com.tradey.technical_analysis.infrastructure.dto.TechnicalAnalysisEventDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String, String>, HTTPResponse> {
+public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String, Object>, HTTPResponse> {
     @Inject
     TechnicalAnalysisController technicalAnalysisController;
 
@@ -25,33 +26,21 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
 
 
     @Override
-    public HTTPResponse handleRequest(Map<String, String> event, Context context) {
-        String exchangeType = event.get("exchange_type");
-        String symbol = event.get("symbol");
-        String timestamp = event.get("timestamp");
-        boolean force = Boolean.parseBoolean(event.get("force"));
-        if (exchangeType == null) {
-            exchangeType = "FUTURES-U_MARGINED";
-            log.warn(String.format("Event has 'exchange_type' is null, use default='%s'", exchangeType));
-        }
-        if (symbol == null) {
-            log.error("'symbol' is required in input event.");
-        }
-        if (timestamp == null) {
-            log.error("'timestamp' is required in input event.");
-        }
-        log.info("Start execute Technical Analysis...");
-        return technicalAnalysisController.execute(exchangeType, symbol, timestamp, force);
+    public HTTPResponse handleRequest(Map<String, Object> event, Context context) {
+        TechnicalAnalysisEventDTO technicalAnalysisEventDTO = TechnicalAnalysisEventDTO.fromEventMap(event);
+
+        return technicalAnalysisController.execute(technicalAnalysisEventDTO);
     }
 
     public static void main(String[] args) {
         TechnicalAnalysisLambdaHandler technicalAnalysisLambdaHandler = new TechnicalAnalysisLambdaHandler();
-        Map<String, String> event = new HashMap<>();
+        Map<String, Object> event = new HashMap<>();
         event.put("exchange_type", "FUTURES-U_MARGINED");
         event.put("symbol", "BTCUSDT");
         event.put("timestamp", "2021-12-20T13:59:59.999000+00:00");
-        event.put("force", "true");
+        event.put("force", true);
 
-        technicalAnalysisLambdaHandler.handleRequest(event, null);
+        HTTPResponse response = technicalAnalysisLambdaHandler.handleRequest(event, null);
+        System.out.println(response.getMessage());
     }
 }
