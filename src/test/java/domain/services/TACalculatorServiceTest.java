@@ -1,6 +1,6 @@
 package domain.services;
 
-import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
+import com.tradey.technical_analysis.domain.entity.KLineEntity;
 import com.tradey.technical_analysis.domain.services.TACalculatorService;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
@@ -16,10 +16,10 @@ public class TACalculatorServiceTest {
         double ohlcvClose3 = 345.6;
         double ohlcvClose4 = 456.7;
 
-        OHLCVEntity ohlcv1 = createOHLCVEntity(ohlcvClose1);
-        OHLCVEntity ohlcv2 = createOHLCVEntity(ohlcvClose2);
-        OHLCVEntity ohlcv3 = createOHLCVEntity(ohlcvClose3);
-        OHLCVEntity ohlcv4 = createOHLCVEntity(ohlcvClose4);
+        KLineEntity ohlcv1 = createOHLCVEntity(ohlcvClose1);
+        KLineEntity ohlcv2 = createOHLCVEntity(ohlcvClose2);
+        KLineEntity ohlcv3 = createOHLCVEntity(ohlcvClose3);
+        KLineEntity ohlcv4 = createOHLCVEntity(ohlcvClose4);
 
         Double ma3 = taCalculatorService.calculateMovingAverage(Arrays.asList(ohlcv1, ohlcv2, ohlcv3, ohlcv4), 3);
 
@@ -34,9 +34,8 @@ public class TACalculatorServiceTest {
         assertNull(ma0);
     }
 
-    private OHLCVEntity createOHLCVEntity(double close) {
-        return OHLCVEntity.builder()
-                .symbol("BTCUSDT").timestamp("2024-01-03T00:00:00")
+    private KLineEntity createOHLCVEntity(double close) {
+        return KLineEntity.builder()
                 .open(0).high(0).low(0).close(close)
                 .ma200(null).ma50(null).diffMa50Ma200(null)
                 .build();
