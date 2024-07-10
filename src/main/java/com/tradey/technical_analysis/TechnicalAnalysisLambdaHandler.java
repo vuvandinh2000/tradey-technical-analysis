@@ -8,13 +8,14 @@ import com.tradey.technical_analysis.config.DaggerTechnicalAnalysisComponent;
 import com.tradey.technical_analysis.controllers.TechnicalAnalysisController;
 import com.tradey.technical_analysis.infrastructure.dto.HTTPResponse;
 import com.tradey.technical_analysis.infrastructure.dto.TechnicalAnalysisEventDTO;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Slf4j
+
 public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String, Object>, HTTPResponse> {
     @Inject
     TechnicalAnalysisController technicalAnalysisController;
@@ -35,12 +36,26 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
     public static void main(String[] args) {
         TechnicalAnalysisLambdaHandler technicalAnalysisLambdaHandler = new TechnicalAnalysisLambdaHandler();
         Map<String, Object> event = new HashMap<>();
-        event.put("exchange_type", "FUTURES-U_MARGINED");
-        event.put("symbol", "BTCUSDT");
-        event.put("timestamp", "2021-12-20T13:59:59.999000+00:00");
-        event.put("force", true);
+        List<Map<String, Object>> latestKLines = new ArrayList<>();
+
+        Map<String, Object> kline1 = new HashMap<>();
+        kline1.put("open", "62670.01000000");
+        kline1.put("high", "62801.05000000");
+        kline1.put("low", "62485.63000000");
+        kline1.put("close", "62715.98000000");
+        kline1.put("volume", "787.71878000");
+        kline1.put("openTime", 1719914400000L);
+        kline1.put("closeTime", 1719917999999L);
+        kline1.put("quoteAssetVolume", "49341118.41858720");
+        kline1.put("numberOfTrades", 44740);
+        kline1.put("takerBuyBaseAssetVolume", "414.63212000");
+        kline1.put("takerBuyQuoteAssetVolume", "25969685.37737870");
+
+        latestKLines.add(kline1);
+
+        event.put("latestKLines", latestKLines);
 
         HTTPResponse response = technicalAnalysisLambdaHandler.handleRequest(event, null);
-        System.out.println(response.getMessage());
+        System.out.println(response.getData());
     }
 }

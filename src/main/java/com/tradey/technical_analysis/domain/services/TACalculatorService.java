@@ -1,21 +1,21 @@
 package com.tradey.technical_analysis.domain.services;
 
-import com.tradey.technical_analysis.domain.entity.OHLCVEntity;
+import com.tradey.technical_analysis.domain.entity.KLineEntity;
 
 import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class TACalculatorService {
-    public Double calculateMovingAverage(List<OHLCVEntity> ohlcvEntityList, int period) {
-        if (ohlcvEntityList.size() < period) {
+    public Double calculateMovingAverage(List<KLineEntity> KLineEntityList, int period) {
+        if (KLineEntityList.size() < period) {
             return null;
         }
 
-        double ma = ohlcvEntityList.stream()
-                .map(OHLCVEntity::getClose)
+        double ma = KLineEntityList.stream()
+                .map(KLineEntity::getClose)
                 .toList()
-                .subList(ohlcvEntityList.size() - period, ohlcvEntityList.size())
+                .subList(KLineEntityList.size() - period, KLineEntityList.size())
                 .stream()
                 .mapToDouble(Double::doubleValue)
                 .average()

@@ -1,9 +1,13 @@
 package com.tradey.technical_analysis.infrastructure.dto;
 
+import com.tradey.technical_analysis.domain.entity.KLineEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -11,24 +15,33 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Getter
 public class TechnicalAnalysisEventDTO {
-    private final String exchangeType;
-    private final String symbol;
-    private final String timestamp;
-    private final boolean force;
+    private final List<KLineEntity> latestKLines;
+    private final Map<String, Object> properties;
 
 
     public static TechnicalAnalysisEventDTO fromEventMap(Map<String, Object> event) {
-        String exchangeType = (String) event.get("exchange_type");
-        String symbol = (String) event.get("symbol");
-        String timestamp = (String) event.get("timestamp");
-        boolean force = (Boolean) event.getOrDefault("force", false);
+        List<Map<String, Object>> kLinesMap = (List<Map<String, Object>>) event.get("latestKLines");
+        Map<String, Object> properties = (HashMap<String, Object>) event.get("properties");
 
-        if (exchangeType == null) {
-            exchangeType = "FUTURES-U_MARGINED";
-            log.warn(String.format("Event has 'exchange_type' is null, use default='%s'", exchangeType));
+        List<KLineEntity> latestKLines = new ArrayList<>();
+        for (Map<String, Object> kLineMap: kLinesMap) {
+            latestKLines.add(
+                    KLineEntity.builder()
+                            .open(Double.parseDouble((String) kLineMap.get("open")))
+                            .high(Double.parseDouble((String) kLineMap.get("high")))
+                            .low(Double.parseDouble((String) kLineMap.get("low")))
+                            .close(Double.parseDouble((String) kLineMap.get("close")))
+                            .volume(Double.parseDouble((String) kLineMap.get("volume")))
+                            .openTime((Long) kLineMap.get("openTime"))
+                            .closeTime((Long) kLineMap.get("closeTime"))
+                            .quoteAssetVolume(Double.parseDouble((String) kLineMap.get("quoteAssetVolume")))
+                            .numberOfTrades((int) kLineMap.get("numberOfTrades"))
+                            .takerBuyBaseAssetVolume(Double.parseDouble((String) kLineMap.get("takerBuyBaseAssetVolume")))
+                            .takerBuyQuoteAssetVolume(Double.parseDouble((String) kLineMap.get("takerBuyQuoteAssetVolume")))
+                            .build()
+            );
         }
 
-        return new TechnicalAnalysisEventDTO(exchangeType, symbol, timestamp, force);
-
+        return new TechnicalAnalysisEventDTO(latestKLines, properties);
     }
 }
