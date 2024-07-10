@@ -18,6 +18,7 @@ public class TechnicalAnalysisModule {
 
     @Singleton
     @Provides
+    @Inject
     TechnicalAnalysisController technicalAnalysisController(TACalculatorService taCalculatorService) {
         return new TechnicalAnalysisController(taCalculatorService);
     }
