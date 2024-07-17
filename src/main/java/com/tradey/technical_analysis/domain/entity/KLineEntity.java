@@ -25,8 +25,12 @@ public class KLineEntity {
     private Double takerBuyBaseAssetVolume;
     private Double takerBuyQuoteAssetVolume;
 
+    private Double ma7;
+    private Double ma25;
     private Double ma50;
+    private Double ma99;
     private Double ma200;
+    private Double diffMa25Ma99;
     private Double diffMa50Ma200;
 
     public Map<String, Object> toMap() {
@@ -42,8 +46,12 @@ public class KLineEntity {
         map.put("numberOfTrades", numberOfTrades);
         map.put("takerBuyBaseAssetVolume", takerBuyBaseAssetVolume != null ? String.format("%.8f", takerBuyBaseAssetVolume) : null);
         map.put("takerBuyQuoteAssetVolume", takerBuyQuoteAssetVolume != null ? String.format("%.8f", takerBuyQuoteAssetVolume) : null);
+        map.put("ma7", ma7 != null ? String.format("%.8f", ma7) : null);
+        map.put("ma25", ma25 != null ? String.format("%.8f", ma25) : null);
         map.put("ma50", ma50 != null ? String.format("%.8f", ma50) : null);
+        map.put("ma99", ma99 != null ? String.format("%.8f", ma99) : null);
         map.put("ma200", ma200 != null ? String.format("%.8f", ma200) : null);
+        map.put("diffMa25Ma99", diffMa25Ma99 != null ? String.format("%.8f", diffMa25Ma99) : null);
         map.put("diffMa50Ma200", diffMa50Ma200 != null ? String.format("%.8f", diffMa50Ma200) : null);
         return map;
     }

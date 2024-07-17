@@ -51,7 +51,10 @@ public class TechnicalAnalysisLambdaHandler implements RequestHandler<Map<String
         kline1.put("takerBuyBaseAssetVolume", "414.63212000");
         kline1.put("takerBuyQuoteAssetVolume", "25969685.37737870");
 
-        latestKLines.add(kline1);
+        for (int i = 0; i < 201; i++) {
+            latestKLines.add(kline1);
+        }
+
 
         event.put("latestKLines", latestKLines);
 
