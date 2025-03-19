@@ -1,4 +1,8 @@
 # Tradey Technical Analysis
+## Overview
+`Tradey` is a microservice app for auto-trading based on TA.
+`Tradey Technical Analysis` is a lightweight service that gets OHLCV data from DB and then calculates the TA metrics (MA50, MA200,...) before saves into DB.
+Make use of the Free Tier of AWS Lambda to run the service at no cost.
 
 ## Flowchart
 ![Tradey Technical Analysis Flowchart](src/main/resources/static/img.png)
